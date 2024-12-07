@@ -20,6 +20,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Publish application
       run: dotnet publish --no-restore --configuration Release -o publish
+    - name: Debug working directory
+      run: pwd && ls -la
+
 
   deploy:
     runs-on: ubuntu-latest
