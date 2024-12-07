@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -19,5 +18,23 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
-    # - name: Test
-    #   run: dotnet test --no-build --verbosity normal
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Copy build artifacts to Raspberry Pi via ssh password
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.VISION_PI_HOST }}
+          username: ${{ secrets.VISION_PI_USER }}
+          key: ${{ secrets.VISION_PI_KEY }}
+          source: ./publish/*
+          target: ~/srv
+
+
+
