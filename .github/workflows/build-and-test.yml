@@ -43,6 +43,7 @@ jobs:
           key: ${{ secrets.VISION_PI_KEY }}
           source: ./publish/*
           target: ./srv
+          debug: true
 
 
 
