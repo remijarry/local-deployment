@@ -20,30 +20,36 @@ jobs:
       run: dotnet build --no-restore
     - name: Publish application
       run: dotnet publish --no-restore --configuration Release -o publish
-    - name: Debug working directory
-      run: pwd && ls -la
-    - name: List contents of the publish directory
-      run: ls -R ./publish || echo "Publish directory is empty"
 
 
-
-  deploy:
+  verify-paths:
     runs-on: ubuntu-latest
-    needs: build-and-publish
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Copy build artifacts to Raspberry Pi via ssh password
-        uses: appleboy/scp-action@v0.1.7
+      - name: Debug working directory
+        run: pwd && ls -la
+      - name: List contents of the publish directory
+        run: ls -R ./publish || echo "Publish directory is empty"
+      - name: Check the target directory on the PI
+        run: ssh -i ${{ secrets.VISION_PI_KEY }} -o StrictHostKeyChecking=no ${{ secrets.VISION_PI_USER }}@${{ secrets.VISION_PI_HOST }} "ls -la ~/srv"
 
-        with:
-          host: ${{ secrets.VISION_PI_HOST }}
-          username: ${{ secrets.VISION_PI_USER }}
-          key: ${{ secrets.VISION_PI_KEY }}
-          source: "./publish/*"
-          target: "~/srv/"
-          debug: true
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   needs: build-and-publish
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Copy build artifacts to Raspberry Pi via ssh password
+  #       uses: appleboy/scp-action@v0.1.7
+
+  #       with:
+  #         host: ${{ secrets.VISION_PI_HOST }}
+  #         username: ${{ secrets.VISION_PI_USER }}
+  #         key: ${{ secrets.VISION_PI_KEY }}
+  #         source: "./publish/*"
+  #         target: "~/srv/"
+  #         debug: true
 
 
 
