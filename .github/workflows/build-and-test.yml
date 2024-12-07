@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.VISION_PI_USER }}
           key: ${{ secrets.VISION_PI_KEY }}
           source: ./publish/*
-          target: ~/srv
+          target: ./srv
 
 
 
