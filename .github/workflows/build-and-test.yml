@@ -41,7 +41,7 @@ jobs:
           host: ${{ secrets.VISION_PI_HOST }}
           username: ${{ secrets.VISION_PI_USER }}
           key: ${{ secrets.VISION_PI_KEY }}
-          source: ./publish/*
+          source: ./publish
           target: ./srv
           debug: true
 
