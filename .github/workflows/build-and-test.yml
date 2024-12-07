@@ -22,6 +22,9 @@ jobs:
       run: dotnet publish --no-restore --configuration Release -o publish
     - name: Debug working directory
       run: pwd && ls -la
+    - name: List contents of the publish directory
+      run: ls -R ./publish || echo "Publish directory is empty"
+
 
 
   deploy:
