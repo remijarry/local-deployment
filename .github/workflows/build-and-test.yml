@@ -41,7 +41,7 @@ jobs:
           host: ${{ secrets.VISION_PI_HOST }}
           username: ${{ secrets.VISION_PI_USER }}
           key: ${{ secrets.VISION_PI_KEY }}
-          source: ./publish
+          source: /home/runner/work/local-deployment/local-deployment/publish
           target: ./srv
           debug: true
 
