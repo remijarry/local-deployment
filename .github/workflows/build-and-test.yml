@@ -30,12 +30,13 @@ jobs:
         run: pwd && ls -la
       - name: List contents of the publish directory
         run: ls -R ./publish || echo "Publish directory is empty"
-      - name: Debug SSH Key
+      - name: Set Up SSH key
         run: |
-          echo "Checking SSH Key"
-          echo "${{ secrets.SSH_KEY }}" | head -n 5  # Only print the first 5 lines to prevent exposing the whole key
+          mkdir -p ~/.ssh
+          echo "${{secrets.SSH_KEY}}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
       - name: Check the target directory on the PI
-        run: ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no ${{ secrets.VISION_PI_USER }}@${{ secrets.VISION_PI_HOST }} "ls -la ~/srv"
+        run: ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.VISION_PI_USER }}@${{ secrets.VISION_PI_HOST }} "ls -la ~/srv"
 
   # deploy:
   #   runs-on: ubuntu-latest
