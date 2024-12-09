@@ -33,9 +33,9 @@ jobs:
       - name: Debug SSH Key
         run: |
           echo "Checking SSH Key"
-          echo "${{ secrets.VISION_PI_KEY }}" | head -n 5  # Only print the first 5 lines to prevent exposing the whole key
+          echo "${{ secrets.SSH_KEY }}" | head -n 5  # Only print the first 5 lines to prevent exposing the whole key
       - name: Check the target directory on the PI
-        run: ssh -i ${{ secrets.VISION_PI_KEY }} -o StrictHostKeyChecking=no ${{ secrets.VISION_PI_USER }}@${{ secrets.VISION_PI_HOST }} "ls -la ~/srv"
+        run: ssh -i ${{ secrets.SSH_KEY }} -o StrictHostKeyChecking=no ${{ secrets.VISION_PI_USER }}@${{ secrets.VISION_PI_HOST }} "ls -la ~/srv"
 
   # deploy:
   #   runs-on: ubuntu-latest
