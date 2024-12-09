@@ -22,40 +22,41 @@ jobs:
       run: dotnet publish --no-restore --configuration Release -o publish
 
 
-  verify-paths:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Debug working directory
-        run: pwd && ls -la
-      - name: List contents of the publish directory
-        run: ls -R ./publish || echo "Publish directory is empty"
-      - name: Set Up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          cat ~/.ssh/id_ed25519  # Check the key contents
-          ssh-keyscan -H ${{ secrets.VISION_PI_HOST }} >> ~/.ssh/known_hosts
-          cat ~/.ssh/known_hosts  # Verify the known_hosts file is populated
-
-  # deploy:
+  # verify-paths:
   #   runs-on: ubuntu-latest
-  #   needs: build-and-publish
 
   #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-  #     - name: Copy build artifacts to Raspberry Pi via ssh password
-  #       uses: appleboy/scp-action@v0.1.7
+      # - name: Debug working directory
+      #   run: pwd && ls -la
+      # - name: List contents of the publish directory
+      #   run: ls -R ./publish || echo "Publish directory is empty"
+      # - name: Set Up SSH key
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+      #     chmod 600 ~/.ssh/id_ed25519
+      #     cat ~/.ssh/id_ed25519  # Check the key contents
+      #     ssh-keyscan -H ${{ secrets.VISION_PI_HOST }} >> ~/.ssh/known_hosts
+      #     cat ~/.ssh/known_hosts  # Verify the known_hosts file is populated
 
-  #       with:
-  #         host: ${{ secrets.VISION_PI_HOST }}
-  #         username: ${{ secrets.VISION_PI_USER }}
-  #         key: ${{ secrets.VISION_PI_KEY }}
-  #         source: "./publish/*"
-  #         target: "~/srv/"
-  #         debug: true
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-publish
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Copy build artifacts to Raspberry Pi via ssh password
+        uses: appleboy/scp-action@v0.1.7
+
+        with:
+          host: ${{ secrets.VISION_PI_HOST }}
+          username: ${{ secrets.VISION_PI_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "./publish/*"
+          target: "~/srv/"
+          debug: true
 
 
 
