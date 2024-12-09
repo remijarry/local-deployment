@@ -35,8 +35,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{secrets.SSH_KEY}}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.VISION_PI_HOST }} >> ~/.ssh/known_hosts
       - name: Check the target directory on the PI
-        run: ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.VISION_PI_USER }}@${{ secrets.VISION_PI_HOST }} "ls -la ~/srv"
+        run: ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.VISION_PI_USER }}@${{ secrets.VISION_PI_HOST }} "ls -la /srv"
 
   # deploy:
   #   runs-on: ubuntu-latest
